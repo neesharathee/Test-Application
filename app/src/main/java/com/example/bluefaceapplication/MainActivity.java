@@ -1,8 +1,5 @@
 package com.example.bluefaceapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,6 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.example.bluefaceapplication.model.City;
+import com.example.bluefaceapplication.model.JsonData;
+import com.example.bluefaceapplication.model.Weather;
+import com.example.bluefaceapplication.retrofit.ApiClient;
+import com.example.bluefaceapplication.retrofit.ApiService;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -19,11 +24,18 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.MessageFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
+
 
     @BindView(R.id.displayTV)
     TextView displayTV;
@@ -47,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        //Test 1
         JsonData js = new JsonData();
         City city = new City();
         String str = js.getJsonString();
@@ -91,13 +104,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Test 2
     @OnClick(R.id.displayBTN)
     public void displayCityDetailsInTV() {
         city = new City();
         city.setName(String.valueOf(cityNameET.getText()));
         city.setRank(Integer.parseInt(String.valueOf(cityRankET.getText())));
-        displayTV.setText("City is: " + city.getName() + " Rank is: " + city.getRank());
+        displayTV.setText(MessageFormat.format("City Name is:{0} Rank is: {1}", city.getName(), city.getRank()));
         getUserLocation();
+        getCityTemp(String.valueOf(cityNameET.getText()));
+
+    }
+
+    //Test 3
+    public void getCityTemp(String cityname) {
+        ApiService apiService = ApiClient.getClient(getApplicationContext())
+                .create(ApiService.class);
+
+
+        final DisposableSingleObserver<Weather> disposableSingleObserver = apiService.getWeatherData(cityname)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Weather>() {
+                    @Override
+                    public void onSuccess(@NonNull Weather weather) {
+                        city.setTemperature((float) weather.getMain().getTemp());
+                        tempTV.setText(MessageFormat.format("Temperature : {0} ℃", city.getTemperature()));
+                        Log.d(TAG, "Temperature :" + weather.getMain().getTemp());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // Network error
+                    }
+                });
+
 
     }
 }

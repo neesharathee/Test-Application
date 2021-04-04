@@ -1,4 +1,4 @@
-package com.example.bluefaceapplication;
+package com.example.bluefaceapplication.model;
 
 public class JsonData {
     private String paris = "{\"city\": {\n" +
@@ -8,7 +8,7 @@ public class JsonData {
             "}\n" +
             "}";
 
-    public String getJsonString(){
+    public String getJsonString() {
         return paris;
     }
 }
