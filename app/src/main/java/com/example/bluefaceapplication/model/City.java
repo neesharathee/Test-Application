@@ -1,7 +1,7 @@
-package com.example.bluefaceapplication;
+package com.example.bluefaceapplication.model;
 
 
-public class City {
+public class City extends BaseResponse {
     public String name;
     public int rank;
     public float temperature;
@@ -29,8 +29,9 @@ public class City {
     public void setTemperature(float temperature) {
         this.temperature = temperature;
     }
+
     @Override
-    public String toString(){
-        return "City is: "+name+ " Rank is: " +rank;
+    public String toString() {
+        return "City is: " + name + " Rank is: " + rank;
     }
 }
