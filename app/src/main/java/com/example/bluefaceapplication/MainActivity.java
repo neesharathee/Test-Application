@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -107,12 +108,22 @@ public class MainActivity extends AppCompatActivity {
     //Test 2
     @OnClick(R.id.displayBTN)
     public void displayCityDetailsInTV() {
-        city = new City();
-        city.setName(String.valueOf(cityNameET.getText()));
-        city.setRank(Integer.parseInt(String.valueOf(cityRankET.getText())));
-        displayTV.setText(MessageFormat.format("City Name is:{0} Rank is: {1}", city.getName(), city.getRank()));
-        getUserLocation();
-        getCityTemp(String.valueOf(cityNameET.getText()));
+        if (validate()) {
+            city = new City();
+            city.setName(cityNameET.getText().toString());
+            try {
+                int rank = Integer.parseInt(cityRankET.getText().toString());
+                city.setRank(rank);
+            } catch (NumberFormatException e) {
+                city.setRank(0);
+            }
+            displayTV.setText(MessageFormat.format("City Name is:{0} Rank is: {1}", city.getName(), city.getRank()));
+            getUserLocation();
+            getCityTemp(String.valueOf(cityNameET.getText()));
+        } else {
+            displayTV.setText(R.string.enter_city_details);
+        }
+
 
     }
 
@@ -136,9 +147,26 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         // Network error
+                        tempTV.setText(R.string.select_city_name);
                     }
                 });
 
 
+    }
+
+    public boolean validate() {
+
+        String name = cityNameET.getText().toString();
+        String rank = cityRankET.getText().toString();
+
+        if (name == null | name.isEmpty()) {
+            Toast.makeText(this, "Set city name", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (rank == null | rank.isEmpty()) {
+            Toast.makeText(this, "Set city rank", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }

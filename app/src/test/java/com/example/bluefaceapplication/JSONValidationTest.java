@@ -8,7 +8,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 public class JSONValidationTest {
 
     @Test
-    public void TestJSON(){
+    public void TestJSON() {
         String actual = "{\"city\": {\n" +
                 "\"name\": \"Paris\",\n" +
                 "\"rank\": 7,\n" +
