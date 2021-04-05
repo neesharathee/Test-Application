@@ -12,7 +12,7 @@ Test 2: User Input and Output: Branch user_input
 
 Test 3: Rx Java & Retrofit: Branch api_call
 This test uses the OpenWeather API to request weather for the city name collected in test 2.1
-http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid=bec2ea2f434c848c09196f2de96e3c4c
+http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid=API_KEY
 3.1 Using the OpenWeather API weather endpoint above, build a request using Retrofit to the above endpoint that gets weather data for the city added for test 2.1
 3.2 Demonstrate your understanding of RxJava by observing the result of the request used for 3.1 and updating the user interface to show the current temperature in Celsius
 
